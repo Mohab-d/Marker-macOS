@@ -30,11 +30,11 @@ struct MarkerController {
     }
     
     // generate text
-    func generateText(txt: String) -> NSAttributedString {
+    func generateText(txt: String, txtSize: Double) -> NSAttributedString {
         let paragrapghStyle = NSMutableParagraphStyle()
         paragrapghStyle.alignment = .center
         let attrs: [NSAttributedString.Key: Any] = [
-            .font: NSFont(name: "Arial", size: 36)!,
+            .font: NSFont(name: "Arial", size: txtSize)!,
             .paragraphStyle: paragrapghStyle
         ]
         let attributedString = NSAttributedString(string: txt, attributes: attrs)

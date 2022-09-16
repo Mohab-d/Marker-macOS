@@ -57,6 +57,7 @@
 			isa = PBXGroup;
 			children = (
 				885245DD28C5F2C900FABF62 /* Model */,
+				885245DE28C5F37900FABF62 /* MarkerController.swift */,
 				885245DC28C5F2BE00FABF62 /* Controller */,
 				885245C928C5DD6700FABF62 /* AppDelegate.swift */,
 				885245CB28C5DD6700FABF62 /* ViewController.swift */,
@@ -79,7 +80,6 @@
 		885245DC28C5F2BE00FABF62 /* Controller */ = {
 			isa = PBXGroup;
 			children = (
-				885245DE28C5F37900FABF62 /* MarkerController.swift */,
 			);
 			path = Controller;
 			sourceTree = "<group>";

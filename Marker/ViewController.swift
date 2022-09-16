@@ -1,10 +1,3 @@
-//
-//  ViewController.swift
-//  Marker
-//
-//  Created by IMac on 05/09/2022.
-//
-
 import Cocoa
 
 class ViewController: NSViewController {
@@ -16,32 +9,35 @@ class ViewController: NSViewController {
     @IBOutlet weak var generatedBarcodesTable: NSScrollView!
     @IBOutlet weak var userWidth: NSTextField!
     @IBOutlet weak var userHeight: NSTextField!
+    @IBOutlet weak var inputErrorMessege: NSTextField!
+    @IBOutlet weak var selectedFontSize: NSPopUpButton!
     
     let markerController = MarkerController()
-    
     override func viewDidLoad() {
         super.viewDidLoad()
-//        barcodeView.draw(NSRect(origin: CGPoint(x: 0, y: 0), size: CGSize(width: 100, height: 50)))
     }
     
     override var representedObject: Any? {
         didSet {
-            // Update the view, if already loaded.
         }
     }
     
     @IBAction func GenerateRandomBarcode(_ sender: NSButton) {
         
-        // convert width and height to pixels
-        let computedWidth: Double? = Double((userWidth.cell?.title ?? "0"))! * 0.0264583333
-        let computedHeight: Double? = Double((userHeight.cell?.title ?? "0"))! * 0.0264583333
+        let computedWidth =  Double(userWidth.cell!.title)!
+        let computedHeight =  Double(userHeight.cell!.title)!
         
-        if computedWidth != nil && computedHeight != nil {
-            barcodeView.draw(NSRect(origin: CGPoint(x: 0, y: 0), size: CGSize(width: computedWidth!, height: computedHeight!)))
-        }
-        
+        let barcode = BarcodePropeties(barcodeValue: userInput.cell!.title,
+                                       width: computedWidth,
+                                       height: computedHeight,
+                                       textSize: selectedFontSize.doubleValue,
+                                       hasLabel: true)
+//        barcodeView.checkConditions() <--- working on it
+        barcodeView.barcodeProperties = barcode
+        barcodeView.needsDisplay = true
     }
     
     @IBAction func saveBarcodes(_ sender: NSButton) {
     }
 }
+
