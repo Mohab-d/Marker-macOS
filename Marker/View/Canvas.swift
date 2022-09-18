@@ -98,10 +98,11 @@ class Canvas: NSView {
             return false
         }
         if barcodeProperties.height > drawingArea.height {
-            barcodeProperties.width = 477.0
+            barcodeProperties.height = 477.0
             label.stringValue = "The barcode you made is bigger than the view area so Marker minimized it but it will have your selected size upon saving (Max width = 625, Max height = 477)"
             return false
         }
+        
         label.stringValue = ""
         return true
     }

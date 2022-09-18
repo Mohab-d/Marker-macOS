@@ -984,7 +984,7 @@
                                             <textField horizontalHuggingPriority="251" verticalHuggingPriority="750" textCompletion="NO" translatesAutoresizingMaskIntoConstraints="NO" id="cJj-Ru-e5i">
                                                 <rect key="frame" x="-2" y="0.0" width="54" height="15"/>
                                                 <textFieldCell key="cell" id="4SQ-Rl-Byn">
-                                                    <font key="font" metaFont="system" size="12"/>
+                                                    <font key="font" metaFont="cellTitle"/>
                                                     <color key="textColor" red="0.67978352310000001" green="0.15159259999999999" blue="0.067888067910000002" alpha="1" colorSpace="custom" customColorSpace="displayP3"/>
                                                     <color key="backgroundColor" name="textBackgroundColor" catalog="System" colorSpace="catalog"/>
                                                 </textFieldCell>
