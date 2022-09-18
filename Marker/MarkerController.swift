@@ -4,7 +4,14 @@ import AppKit
 struct MarkerController {
     
     //generate barcode
-    func CGBarcode(value: String, size: CGSize) -> NSImage? {
+    /// Makes a barcode from a given value and size
+    ///
+    ///  - Parameters:
+    ///     - value: The value to represent as barcode
+    ///     - size: The wanted size for the barcode
+    ///
+    /// - Returns: An optional NSImage ready to be drawn
+    func makeBarcode(value: String, size: CGSize) -> NSImage? {
         
         // encode inpute
         let userInput = value.data(using: String.Encoding.ascii)
@@ -30,6 +37,12 @@ struct MarkerController {
     }
     
     // generate text
+    /// Generates the text of the barcode
+    ///
+    /// - Parameters:
+    ///     - txt: the String to draw
+    ///     - txtSize: the size of the txt
+    /// - Returns: A String ready to be drawn
     func generateText(txt: String, txtSize: Double) -> NSAttributedString {
         let paragrapghStyle = NSMutableParagraphStyle()
         paragrapghStyle.alignment = .center

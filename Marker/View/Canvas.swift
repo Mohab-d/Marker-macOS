@@ -43,11 +43,12 @@ class Canvas: NSView {
     }
     
     // draw barcode
+    /// Generates a barcode with text under based on `barcodeProperties`
     func generateBarcode() {
         if let ctx: CGContext = NSGraphicsContext.current?.cgContext {
             
             // barcode
-            if let barcode = markerController.CGBarcode(value: barcodeProperties.barcodeValue,
+            if let barcode = markerController.makeBarcode(value: barcodeProperties.barcodeValue,
                                                         size: CGSize(width: barcodeProperties.width,
                                                                      height: barcodeProperties.height)) {
                 barcodeXPosition = (drawingArea.width - barcodeProperties.width) / 2
@@ -75,6 +76,12 @@ class Canvas: NSView {
     }
     
     // check conditions <-- fix the small bugs
+    /// Checks if given properties are allowed
+    ///
+    /// - Parameters:
+    ///     - label: a label in which to write the error messege
+    ///
+    /// - Returns: a bool to make sure all conditions were applyed
     func checkConditions(label: NSTextField) -> Bool {
         let characterset = CharacterSet(charactersIn:"abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789-")
         if barcodeProperties.barcodeValue.rangeOfCharacter(from: characterset.inverted) != nil {
