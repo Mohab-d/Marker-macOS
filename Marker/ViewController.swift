@@ -30,11 +30,12 @@ class ViewController: NSViewController {
         let barcode = BarcodePropeties(barcodeValue: userInput.cell!.title,
                                        width: computedWidth,
                                        height: computedHeight,
-                                       textSize: selectedFontSize.doubleValue,
+                                       textSize: Double(userWidth.cell!.title)! * 0.1,
                                        hasLabel: true)
-//        barcodeView.checkConditions() <--- working on it
         barcodeView.barcodeProperties = barcode
-        barcodeView.needsDisplay = true
+        if barcodeView.checkConditions(label: inputErrorMessege) {
+            barcodeView.needsDisplay = true
+        }
     }
     
     @IBAction func saveBarcodes(_ sender: NSButton) {

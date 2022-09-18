@@ -74,24 +74,29 @@ class Canvas: NSView {
         }
     }
     
-    // check conditions
-    func checkConditions() -> String? {
+    // check conditions <-- fix the small bugs
+    func checkConditions(label: NSTextField) -> Bool {
         let characterset = CharacterSet(charactersIn:"abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789-")
         if barcodeProperties.barcodeValue.rangeOfCharacter(from: characterset.inverted) != nil {
-            return "Should only contains Aa -> Zz, -"
+            label.stringValue = "Should only contains Aa -> Zz, -"
+            return false
         }
         if barcodeProperties.barcodeValue.count > 70 {
-            return "Limit is 70 characters"
+            label.stringValue = "Limit is 70 characters"
+            return false
         }
         if barcodeProperties.width > drawingArea.width {
-            return "The barcode you made is bigger than the view area so Marker minimized it but it will have your selected size upon saving (Max width = 625, Max height = 477)"
             barcodeProperties.width = 625.0
+            label.stringValue = "The barcode you made is bigger than the view area so Marker minimized it but it will have your selected size upon saving (Max width = 625, Max height = 477)"
+            return false
         }
         if barcodeProperties.height > drawingArea.height {
-            return "The barcode you made is bigger than the view area so Marker minimized it but it will have your selected size upon saving (Max width = 625, Max height = 477)"
             barcodeProperties.width = 477.0
+            label.stringValue = "The barcode you made is bigger than the view area so Marker minimized it but it will have your selected size upon saving (Max width = 625, Max height = 477)"
+            return false
         }
-        return nil
+        label.stringValue = ""
+        return true
     }
 }
 
