@@ -29,6 +29,8 @@ class Canvas: NSView {
     
     // values to calculate position
     var drawingArea: CGSize = CGSize(width: 0.0, height: 0.0)
+    var backgroundRectXPosition: Double = 0.0
+    var backgroundRectYPosition: Double = 0.0
     var barcodeXPosition: Double = 0.0
     var barcodeYPosition: Double = 0.0
     var textYPosition: Double = 0.0
@@ -56,20 +58,37 @@ class Canvas: NSView {
                 let barcodeRect = CGRect(origin: CGPoint(x: barcodeXPosition,
                                                          y: barcodeYPosition),
                                          size: barcode.size)
-                barcode.draw(in: barcodeRect)
-                
                 // text
                 if barcodeProperties.hasLabel {
                     let text = markerController.generateText(txt: barcodeProperties.barcodeValue,
                                                              txtSize: barcodeProperties.textSize)
                     textXPosition = (drawingArea.width - text.size().width) / 2
-                    textYPosition = (barcodeYPosition + (barcodeProperties.height / 5)) - text.size().height
+                    textYPosition = (barcodeYPosition + (barcodeProperties.height / 5.3)) - text.size().height
                     
                     let textRect = NSRect(origin: CGPoint(x: textXPosition,
                                                           y: textYPosition),
                                           size: text.size())
                     ctx.setTextDrawingMode(.fill)
+                    
+                    // white rectangle
+                    var rectWidth: Double = 0.0
+                    if text.size().width > barcodeProperties.width {
+                        rectWidth = text.size().width
+                    } else { rectWidth = barcodeProperties.width }
+                    
+                    let whiteRect = CGRect(x: (drawingArea.width - rectWidth) / 2,
+                                           y: textYPosition - 3,
+                                           width: rectWidth,
+                                           height: barcodeProperties.height + text.size().height)
+                    ctx.setFillColor(CGColor.white)
+                    ctx.addRect(whiteRect)
+                    
+                    // start drawing
+                    ctx.drawPath(using: CGPathDrawingMode.fill)
+                    barcode.draw(in: barcodeRect)
                     text.draw(in: textRect)
+                } else {
+                    barcode.draw(in: barcodeRect)
                 }
             }
         }
@@ -92,19 +111,18 @@ class Canvas: NSView {
             label.stringValue = "Limit is 70 characters"
             return false
         }
-        if barcodeProperties.width > drawingArea.width {
-            barcodeProperties.width = 625.0
-            label.stringValue = "The barcode you made is bigger than the view area so Marker minimized it but it will have your selected size upon saving (Max width = 625, Max height = 477)"
-            return false
+        if barcodeProperties.width + 10 > drawingArea.width {
+            barcodeProperties.width = 604
+            label.stringValue = "The barcode you made is bigger than the view area so Marker minimized it but it will have your selected size upon saving (Max width = 16, Max height = 12)"
         }
-        if barcodeProperties.height > drawingArea.height {
-            barcodeProperties.height = 477.0
-            label.stringValue = "The barcode you made is bigger than the view area so Marker minimized it but it will have your selected size upon saving (Max width = 625, Max height = 477)"
-            return false
+        if barcodeProperties.height + 10 > drawingArea.height {
+            barcodeProperties.height = 453
+//            print(barcodeProperties.height)
+//            print(barcodeProperties.height + 10 > drawingArea.height)
+            label.stringValue = "The barcode you made is bigger than the view area so Marker minimized it but it will have your selected size upon saving (Max width = 16, Max height = 12)"
+            return true
         }
-        
         label.stringValue = ""
         return true
     }
 }
-
