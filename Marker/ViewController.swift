@@ -13,6 +13,8 @@ class ViewController: NSViewController {
     @IBOutlet weak var selectedFontSize: NSPopUpButton!
     @IBOutlet weak var generateRandomChecked: NSButton!
     @IBOutlet weak var ShowValueChecked: NSButton!
+    @IBOutlet weak var numberOfDigits: NSTextField!
+    
     
     let markerController = MarkerController()
     
@@ -58,6 +60,7 @@ class ViewController: NSViewController {
     
     @IBAction func GenerateRandomBarcode(_ sender: NSButton) {
         redrawView()
+        generateRandom()
     }
     
     @IBAction func saveBarcodes(_ sender: NSButton) {
@@ -94,6 +97,43 @@ class ViewController: NSViewController {
         barcodeView.barcodeProperties = barcode
         if barcodeView.checkConditions(label: inputErrorMessege) {
             barcodeView.needsDisplay = true
+        }
+    }
+    
+    // generate random barcode
+    func generateRandom() {
+        if onlyNumbersBox.state == NSControl.StateValue.on {
+            var counter: Int = 0
+            
+            // calculate minValue <--- explain more
+            let minValue: Int = {
+                var min = "1"
+                var counter = 0
+                while counter < Int(numberOfDigits.stringValue)! - 1 {
+                    min += "0"
+                    counter += 1
+                }
+                return Int(min)!
+            }()
+            
+            // calculate maxValue <--- explain more
+            var maxValue: Int {
+                var max = ""
+                var counter = 0
+                while counter < Int(numberOfDigits.stringValue)! {
+                    max += "9"
+                    counter += 1
+                }
+                return Int(max)!
+            }
+            
+            
+            if let amount = Int(amount.stringValue) {
+                while counter < amount {
+                    let n = Int.random(in: minValue...maxValue)
+                    counter += 1
+                }
+            }
         }
     }
 }
