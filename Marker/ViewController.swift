@@ -12,7 +12,7 @@ class ViewController: NSViewController {
     @IBOutlet weak var inputErrorMessege: NSTextField!
     @IBOutlet weak var selectedFontSize: NSPopUpButton!
     @IBOutlet weak var generateRandomChecked: NSButton!
-    @IBOutlet weak var ShowValueChecked: NSButton!
+    @IBOutlet weak var showValueChecked: NSButton!  
     @IBOutlet weak var numberOfDigits: NSTextField!
     
     
@@ -47,7 +47,7 @@ class ViewController: NSViewController {
     }
     
     @IBAction func showValuePressed(_ sender: NSButton) {
-        if ShowValueChecked.state == NSControl.StateValue.on {
+        if showValueChecked.state == NSControl.StateValue.on {
             selectedFontSize.isEnabled = true
             return
         }
@@ -64,40 +64,6 @@ class ViewController: NSViewController {
     }
     
     @IBAction func saveBarcodes(_ sender: NSButton) {
-    }
-    
-    // redraw view to adopt changes
-    func redrawView() {
-        // convert user input from cm to pixels
-        let computedWidth =  Double(userWidth.cell!.title)! * 37.795275591
-        let computedHeight =  Double(userHeight.cell!.title)! * 37.795275591
-        
-        // check if user want to show the barcode value
-        let readable: Bool = {
-            if ShowValueChecked.state == NSControl.StateValue.on {
-                return true
-            }
-            return false
-        }()
-        
-        
-        let fontSize: Double = {
-            if selectedFontSize.title != "Font size" {
-                return Double(selectedFontSize.title)!
-            }
-            return computedHeight * 0.2
-        }()
-        
-        let barcode = BarcodePropeties(barcodeValue: userInput.cell!.title,
-                                       width: computedWidth,
-                                       height: computedHeight,
-                                       textSize: fontSize,
-                                       hasLabel: readable)
-        
-        barcodeView.barcodeProperties = barcode
-        if barcodeView.checkConditions(label: inputErrorMessege) {
-            barcodeView.needsDisplay = true
-        }
     }
     
     // generate random barcode
@@ -127,13 +93,89 @@ class ViewController: NSViewController {
                 return Int(max)!
             }
             
-            
+            // creat the random barcode
             if let amount = Int(amount.stringValue) {
                 while counter < amount {
                     let n = Int.random(in: minValue...maxValue)
                     counter += 1
                 }
             }
+        }
+    }
+    
+    // redraw view to adopt changes
+    func redrawView() {
+        // convert user input from cm to pixels
+        if userInput.stringValue == "" {
+            inputErrorMessege.stringValue = "Please insert a value in the insert box"
+            return
+        }
+        
+        let invalidInput: Bool = {
+            let decimalCharacters = CharacterSet.decimalDigits
+            let decimalRangeInWidth = userWidth.cell?.title.rangeOfCharacter(from: decimalCharacters)
+            let decimalRangeInHight = userHeight.cell?.title.rangeOfCharacter(from: decimalCharacters)
+            if decimalRangeInWidth != nil {
+                return true // did found numbers
+            }
+            if decimalRangeInHight != nil {
+                return true // did found numbers
+            }
+            
+            // contains numbers only?
+            return 
+        }()
+        
+        if userWidth.cell?.title != "" && invalidInput {
+            let computedWidth = Double(userWidth.cell!.title)! * 37.795275591
+            if userHeight.cell?.title != "" {
+                let computedHeight = Double(userHeight.cell!.title)! * 37.795275591
+                
+                // check if user want to show the barcode value
+                let isReadable: Bool = {
+                    if showValueChecked.state == NSControl.StateValue.on {
+                        return true
+                    }
+                    return false
+                }()
+                
+                // user's selected font size
+                let fontSize: Double = {
+                    if selectedFontSize.title != "Font size" {
+                        return Double(selectedFontSize.title)!
+                    }
+                    if let computedHeight = userHeight.cell?.stringValue {
+                        return Double(computedHeight)! * 0.2
+                    }
+                    inputErrorMessege.stringValue = "An unknown error occured"
+                    return 0.0
+                }()
+                
+                // creat barcode object
+                let barcode = BarcodePropeties(barcodeValue: userInput.cell!.title,
+                                               width: computedWidth,
+                                               height: computedHeight,
+                                               textSize: fontSize,
+                                               hasLabel: isReadable)
+                
+                // set the barcode properties to the new barcode
+                barcodeView.barcodeProperties = barcode
+                
+                // start redrawing if conditions are passed
+                if barcodeView.checkConditions(label: inputErrorMessege) {
+                    barcodeView.needsDisplay = true
+                }
+            } else if !invalidInput {
+                inputErrorMessege.stringValue = "Width and Height can only accept numbers"
+                print("Width and Height can only accept numbers")
+                return
+            } else {
+                inputErrorMessege.stringValue = "Please insert a height value"
+                return
+            }
+        } else {
+            inputErrorMessege.stringValue = "Please insert a width value"
+            return
         }
     }
 }

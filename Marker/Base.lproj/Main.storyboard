@@ -1136,7 +1136,6 @@
                         </constraints>
                     </view>
                     <connections>
-                        <outlet property="ShowValueChecked" destination="oAV-GI-HWJ" id="cEo-oC-3iA"/>
                         <outlet property="amount" destination="jSD-oX-NPh" id="o9s-sT-mO4"/>
                         <outlet property="barcodeView" destination="q7n-RQ-ZXi" id="yCz-3h-w9O"/>
                         <outlet property="generateRandomChecked" destination="Fyn-bt-8bD" id="PYV-OL-Whx"/>
@@ -1145,6 +1144,7 @@
                         <outlet property="numberOfDigits" destination="exu-gW-uuT" id="Mwe-gE-IaD"/>
                         <outlet property="onlyNumbersBox" destination="FUl-kd-tva" id="W5h-KW-qEP"/>
                         <outlet property="selectedFontSize" destination="yHc-fE-HRg" id="2HN-wg-Avn"/>
+                        <outlet property="showValueChecked" destination="oAV-GI-HWJ" id="cEo-oC-3iA"/>
                         <outlet property="userHeight" destination="wRv-xk-rwW" id="LFC-zv-rdB"/>
                         <outlet property="userInput" destination="SU5-Zg-HNb" id="DgJ-cV-Qfg"/>
                         <outlet property="userWidth" destination="L8M-x6-Iqm" id="XP8-S1-OIk"/>
