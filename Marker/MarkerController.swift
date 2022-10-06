@@ -53,4 +53,51 @@ struct MarkerController {
         let attributedString = NSAttributedString(string: txt, attributes: attrs)
         return attributedString
     }
+    
+    // filters string
+    /// Replace characters included in the given set from the given string with the given replacment
+    ///
+    /// - Parameters:
+    ///     - invalidCharacters: a set contains unwanted characters from a string
+    ///     - string: A string to filter
+    ///     - replacement: A character to replace the unwanted characters in the given set from the given string
+    ///
+    /// - Returns: A string filtered form characters in the given set
+    func filterString(invalidCharacters: CharacterSet, string: String, replacement: String) -> String {
+        let invalidCharactersInString = string.components(separatedBy: invalidCharacters)
+        let filteredString = invalidCharactersInString.joined(separator: replacement)
+        return filteredString
+    }
+    
+    // check if string is valid
+    /// Check if string contains unwanted characters accourding to the given set
+    ///
+    /// - Parameters:
+    ///     - invalidCharacters: Unwanted characters
+    ///     - String: The string to check
+    ///
+    /// - Returns: true if the string is invalid
+    func invalidString(invalidCahracters: CharacterSet, string: String) -> Bool {
+        
+        // check if string contains invalid characters
+        let range = string.rangeOfCharacter(from: invalidCahracters)
+        if range != nil {
+            return true
+        }
+        return false
+     }
+    
+    // counts periods in a string
+    /// Counts periods in the given string
+    ///
+    /// - Returns: Number of period found
+    func periodCounter(string: String) -> Int {
+        var periodCounter: Int = 0
+        for char in string {
+            if char == "." {
+                periodCounter += 1
+            }
+        }
+        return periodCounter
+    }
 }
