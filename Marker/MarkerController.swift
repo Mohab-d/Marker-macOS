@@ -54,6 +54,7 @@ struct MarkerController {
         return attributedString
     }
     
+    //NOT USED AT ALL
     // filters string
     /// Replace characters included in the given set from the given string with the given replacment
     ///
@@ -69,6 +70,14 @@ struct MarkerController {
         return filteredString
     }
     
+    // delet spaces from a string
+    func deletSpaces(string: String) -> String {
+        let invalidCharactersInString = string.components(separatedBy: " ")
+        let filteredString = invalidCharactersInString.joined(separator: "")
+        return filteredString
+    }
+    
+    // NOT USED AT ALL
     // check if string is valid
     /// Check if string contains unwanted characters accourding to the given set
     ///
@@ -78,7 +87,7 @@ struct MarkerController {
     ///
     /// - Returns: true if the string is invalid
     func invalidString(invalidCahracters: CharacterSet, string: String) -> Bool {
-        
+
         // check if string contains invalid characters
         let range = string.rangeOfCharacter(from: invalidCahracters)
         if range != nil {

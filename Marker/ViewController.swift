@@ -110,8 +110,10 @@ class ViewController: NSViewController {
     
     // draw barcode
     func redrawView() {
+        
+        // check if inputs are nil
         if userWidth.cell?.title == "" {
-            inputErrorMessege.cell?.title = "Please insert a width value"
+            inputErrorMessege.cell?.title = "Please insert width value"
             return
         }
         if userHeight.cell?.title == "" {
@@ -130,27 +132,29 @@ class ViewController: NSViewController {
                                                    string: userHeight.cell!.title,
                                                    replacement: "")
         
-        // check if inputs contains invalid characters
+        // check if inputs are nil
+        if width == "" || width == "." {
+            inputErrorMessege.cell?.title = "Please insert a width value"
+            return
+        }
+        if height == "" || height == "." {
+            inputErrorMessege.cell?.title = "Please insert a height value"
+            return
+        }
         
-        if !markerController.invalidString(invalidCahracters: invalidCharacters, string: width) { // <----- fix a bug
-            inputErrorMessege.cell?.title = "Width accept numbers only"
-            return
-        }
-        if !markerController.invalidString(invalidCahracters: invalidCharacters, string: height) { // <---- fix a bug
-            inputErrorMessege.cell?.title = "Height accept numbers only"
-            return
-        }
+        // correct user input
+        userWidth.cell?.title = width
+        userHeight.cell?.title = height
         
         // check if string contains more than one period
-        if markerController.periodCounter(string: width) > 2 {
+        if markerController.periodCounter(string: width) > 1 {
             inputErrorMessege.cell?.title = "Invalid width, contains more than one period"
             return
         }
-        if markerController.periodCounter(string: height) > 2 {
+        if markerController.periodCounter(string: height) > 1 {
             inputErrorMessege.cell?.title = "Invalid height, contains more than one period"
             return
         }
-        /* Test ended --------------- */
         
         // convert inputs from cm to pixels
         let computedWidth = Double(width)! * 37.795275591

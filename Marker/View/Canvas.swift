@@ -111,14 +111,9 @@ class Canvas: NSView {
             label.stringValue = "Limit is 70 characters"
             return false
         }
-        if barcodeProperties.width + 10 > drawingArea.width {
+        if barcodeProperties.width + 10 > drawingArea.width || barcodeProperties.height + 10 > drawingArea.height {
             barcodeProperties.width = 604
-            label.stringValue = "The barcode you made is bigger than the view area so Marker minimized it but it will have your selected size upon saving (Max width = 16, Max height = 12)"
-        }
-        if barcodeProperties.height + 10 > drawingArea.height {
             barcodeProperties.height = 453
-//            print(barcodeProperties.height)
-//            print(barcodeProperties.height + 10 > drawingArea.height)
             label.stringValue = "The barcode you made is bigger than the view area so Marker minimized it but it will have your selected size upon saving (Max width = 16, Max height = 12)"
             return true
         }
