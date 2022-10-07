@@ -132,7 +132,14 @@ class ViewController: NSViewController {
                                                    string: userHeight.cell!.title,
                                                    replacement: "")
         
-        // check if inputs are nil
+        /*
+         At this stage the inputs are completley filterd.
+         So the only non-safe remaining is if the user provided a period without numbers or spaces only,
+         since 'filterString' function will delet spaces the inputs with spaces only will empty,
+         and inputs with one period will pass all the way to crash on line 167
+         */
+        
+        // check if inputs are usable values
         if width == "" || width == "." {
             inputErrorMessege.cell?.title = "Please insert a width value"
             return
