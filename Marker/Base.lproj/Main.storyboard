@@ -840,49 +840,45 @@
                                             </stackView>
                                             <scrollView autohidesScrollers="YES" horizontalLineScroll="17" horizontalPageScroll="10" verticalLineScroll="17" verticalPageScroll="10" usesPredominantAxisScrolling="NO" translatesAutoresizingMaskIntoConstraints="NO" id="fJg-6Q-X5R">
                                                 <rect key="frame" x="0.0" y="238" width="300" height="110"/>
-                                                <clipView key="contentView" ambiguous="YES" drawsBackground="NO" id="96c-H9-Uvg">
+                                                <clipView key="contentView" drawsBackground="NO" id="96c-H9-Uvg">
                                                     <rect key="frame" x="1" y="1" width="298" height="108"/>
                                                     <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                                                     <subviews>
-                                                        <tableView verticalHuggingPriority="750" ambiguous="YES" allowsExpansionToolTips="YES" columnAutoresizingStyle="lastColumnOnly" multipleSelection="NO" autosaveColumns="NO" rowSizeStyle="automatic" headerView="5LV-4o-WYw" viewBased="YES" id="7gB-q9-nxW">
-                                                            <rect key="frame" x="0.0" y="0.0" width="298" height="80"/>
+                                                        <tableView verticalHuggingPriority="750" allowsExpansionToolTips="YES" columnAutoresizingStyle="lastColumnOnly" multipleSelection="NO" autosaveColumns="NO" rowSizeStyle="automatic" headerView="5LV-4o-WYw" viewBased="YES" id="7gB-q9-nxW">
+                                                            <rect key="frame" x="0.0" y="0.0" width="300" height="80"/>
                                                             <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                                                             <size key="intercellSpacing" width="17" height="0.0"/>
                                                             <color key="backgroundColor" name="controlBackgroundColor" catalog="System" colorSpace="catalog"/>
                                                             <color key="gridColor" name="gridColor" catalog="System" colorSpace="catalog"/>
                                                             <tableColumns>
-                                                                <tableColumn width="286" minWidth="40" maxWidth="1000" id="QiE-0k-lVY">
-                                                                    <tableHeaderCell key="headerCell" lineBreakMode="truncatingTail" borderStyle="border" title="Generated barcodes">
+                                                                <tableColumn width="288" minWidth="10" maxWidth="3.4028234663852886e+38" id="ptd-nM-97s">
+                                                                    <tableHeaderCell key="headerCell" lineBreakMode="truncatingTail" borderStyle="border" alignment="left" title="Generated barcodes">
                                                                         <color key="textColor" name="headerTextColor" catalog="System" colorSpace="catalog"/>
-                                                                        <color key="backgroundColor" name="headerColor" catalog="System" colorSpace="catalog"/>
+                                                                        <color key="backgroundColor" white="0.0" alpha="0.0" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
                                                                     </tableHeaderCell>
-                                                                    <textFieldCell key="dataCell" lineBreakMode="truncatingTail" selectable="YES" editable="YES" title="Text Cell" id="v9B-IA-7ZM">
+                                                                    <textFieldCell key="dataCell" lineBreakMode="truncatingTail" selectable="YES" editable="YES" alignment="left" title="Text Cell" id="ODx-jj-nf0">
                                                                         <font key="font" metaFont="system"/>
                                                                         <color key="textColor" name="controlTextColor" catalog="System" colorSpace="catalog"/>
                                                                         <color key="backgroundColor" name="controlBackgroundColor" catalog="System" colorSpace="catalog"/>
                                                                     </textFieldCell>
                                                                     <tableColumnResizingMask key="resizingMask" resizeWithTable="YES" userResizable="YES"/>
                                                                     <prototypeCellViews>
-                                                                        <tableCellView id="sMD-pf-Jen">
-                                                                            <rect key="frame" x="8" y="0.0" width="281" height="17"/>
+                                                                        <tableCellView id="MtG-pE-ya1">
+                                                                            <rect key="frame" x="8" y="0.0" width="283" height="17"/>
                                                                             <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                                                                             <subviews>
-                                                                                <textField identifier="randomBarcodeView" horizontalHuggingPriority="251" verticalHuggingPriority="750" horizontalCompressionResistancePriority="250" translatesAutoresizingMaskIntoConstraints="NO" id="CaN-Fb-jn3">
-                                                                                    <rect key="frame" x="0.0" y="1" width="281" height="16"/>
-                                                                                    <textFieldCell key="cell" lineBreakMode="truncatingTail" sendsActionOnEndEditing="YES" title="Table View Cell" id="h8v-Vk-pJA">
+                                                                                <textField identifier="generatedBarcodeLabel" horizontalHuggingPriority="251" verticalHuggingPriority="750" horizontalCompressionResistancePriority="250" fixedFrame="YES" translatesAutoresizingMaskIntoConstraints="NO" id="M33-il-6Eg" userLabel="Generated barcode label">
+                                                                                    <rect key="frame" x="0.0" y="1" width="283" height="16"/>
+                                                                                    <autoresizingMask key="autoresizingMask" widthSizable="YES" flexibleMinY="YES" flexibleMaxY="YES"/>
+                                                                                    <textFieldCell key="cell" lineBreakMode="truncatingTail" sendsActionOnEndEditing="YES" id="npe-bq-PUM">
                                                                                         <font key="font" usesAppearanceFont="YES"/>
                                                                                         <color key="textColor" name="controlTextColor" catalog="System" colorSpace="catalog"/>
                                                                                         <color key="backgroundColor" name="textBackgroundColor" catalog="System" colorSpace="catalog"/>
                                                                                     </textFieldCell>
                                                                                 </textField>
                                                                             </subviews>
-                                                                            <constraints>
-                                                                                <constraint firstItem="CaN-Fb-jn3" firstAttribute="centerX" secondItem="sMD-pf-Jen" secondAttribute="centerX" id="Bl7-Fk-PiB"/>
-                                                                                <constraint firstItem="CaN-Fb-jn3" firstAttribute="centerY" secondItem="sMD-pf-Jen" secondAttribute="centerY" id="PHA-DR-edI"/>
-                                                                                <constraint firstItem="CaN-Fb-jn3" firstAttribute="leading" secondItem="sMD-pf-Jen" secondAttribute="leading" constant="2" id="p24-JI-aah"/>
-                                                                            </constraints>
                                                                             <connections>
-                                                                                <outlet property="textField" destination="CaN-Fb-jn3" id="HjS-VX-fBy"/>
+                                                                                <outlet property="textField" destination="M33-il-6Eg" id="6cD-j5-hw0"/>
                                                                             </connections>
                                                                         </tableCellView>
                                                                     </prototypeCellViews>
@@ -896,7 +892,7 @@
                                                     <constraint firstAttribute="height" constant="110" id="w15-KL-e2J"/>
                                                     <constraint firstAttribute="width" constant="300" id="zvY-gb-D3s"/>
                                                 </constraints>
-                                                <scroller key="horizontalScroller" hidden="YES" wantsLayer="YES" verticalHuggingPriority="750" horizontal="YES" id="iiU-rI-HIL">
+                                                <scroller key="horizontalScroller" wantsLayer="YES" verticalHuggingPriority="750" horizontal="YES" id="iiU-rI-HIL">
                                                     <rect key="frame" x="1" y="93" width="298" height="16"/>
                                                     <autoresizingMask key="autoresizingMask"/>
                                                 </scroller>
@@ -905,7 +901,7 @@
                                                     <autoresizingMask key="autoresizingMask"/>
                                                 </scroller>
                                                 <tableHeaderView key="headerView" wantsLayer="YES" id="5LV-4o-WYw">
-                                                    <rect key="frame" x="0.0" y="0.0" width="298" height="28"/>
+                                                    <rect key="frame" x="0.0" y="0.0" width="300" height="28"/>
                                                     <autoresizingMask key="autoresizingMask"/>
                                                 </tableHeaderView>
                                             </scrollView>
@@ -922,10 +918,10 @@
                                                 </textFieldCell>
                                             </textField>
                                             <stackView distribution="fill" orientation="vertical" alignment="centerX" spacing="23" horizontalStackHuggingPriority="249.99998474121094" verticalStackHuggingPriority="249.99998474121094" detachesHiddenViews="YES" translatesAutoresizingMaskIntoConstraints="NO" id="020-3T-Yd8">
-                                                <rect key="frame" x="0.0" y="177" width="308" height="22"/>
+                                                <rect key="frame" x="0.0" y="177" width="313" height="22"/>
                                                 <subviews>
                                                     <stackView distribution="fill" orientation="horizontal" alignment="top" spacing="6" horizontalStackHuggingPriority="249.99998474121094" verticalStackHuggingPriority="249.99998474121094" detachesHiddenViews="YES" translatesAutoresizingMaskIntoConstraints="NO" id="XET-xJ-fa2">
-                                                        <rect key="frame" x="0.0" y="0.0" width="308" height="22"/>
+                                                        <rect key="frame" x="3" y="0.0" width="308" height="22"/>
                                                         <subviews>
                                                             <textField horizontalHuggingPriority="251" verticalHuggingPriority="750" translatesAutoresizingMaskIntoConstraints="NO" id="6WT-ve-t2A">
                                                                 <rect key="frame" x="-2" y="2" width="58" height="20"/>
@@ -1139,10 +1135,10 @@
                         <outlet property="amount" destination="jSD-oX-NPh" id="o9s-sT-mO4"/>
                         <outlet property="barcodeView" destination="q7n-RQ-ZXi" id="yCz-3h-w9O"/>
                         <outlet property="generateRandomChecked" destination="Fyn-bt-8bD" id="PYV-OL-Whx"/>
-                        <outlet property="generatedBarcodesTable" destination="fJg-6Q-X5R" id="Iwc-Dt-p87"/>
                         <outlet property="inputErrorMessege" destination="cJj-Ru-e5i" id="Rw3-8p-ewQ"/>
                         <outlet property="numberOfDigits" destination="exu-gW-uuT" id="Mwe-gE-IaD"/>
                         <outlet property="onlyNumbersBox" destination="FUl-kd-tva" id="W5h-KW-qEP"/>
+                        <outlet property="randomBarcodesTable" destination="7gB-q9-nxW" id="tza-wY-wGO"/>
                         <outlet property="selectedFontSize" destination="yHc-fE-HRg" id="2HN-wg-Avn"/>
                         <outlet property="showValueChecked" destination="oAV-GI-HWJ" id="cEo-oC-3iA"/>
                         <outlet property="userHeight" destination="wRv-xk-rwW" id="LFC-zv-rdB"/>
@@ -1152,7 +1148,7 @@
                 </viewController>
                 <customObject id="rPt-NT-nkU" userLabel="First Responder" customClass="NSResponder" sceneMemberID="firstResponder"/>
             </objects>
-            <point key="canvasLocation" x="12.5" y="819.5"/>
+            <point key="canvasLocation" x="12.5" y="819"/>
         </scene>
     </scenes>
 </document>

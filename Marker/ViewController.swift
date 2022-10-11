@@ -6,7 +6,6 @@ class ViewController: NSViewController {
     @IBOutlet weak var userInput: NSTextField!
     @IBOutlet weak var amount: NSTextField!
     @IBOutlet weak var onlyNumbersBox: NSButton!
-    @IBOutlet weak var generatedBarcodesTable: NSScrollView!
     @IBOutlet weak var userWidth: NSTextField!
     @IBOutlet weak var userHeight: NSTextField!
     @IBOutlet weak var inputErrorMessege: NSTextField!
@@ -14,9 +13,11 @@ class ViewController: NSViewController {
     @IBOutlet weak var generateRandomChecked: NSButton!
     @IBOutlet weak var showValueChecked: NSButton!
     @IBOutlet weak var numberOfDigits: NSTextField!
+    @IBOutlet weak var randomBarcodesTable: NSTableView!
     
     
     let markerController = MarkerController()
+    var randomGeneratedBarcodes: [Int]?
     
     override func viewDidLoad() {
         super.viewDidLoad()
@@ -61,51 +62,63 @@ class ViewController: NSViewController {
     @IBAction func GenerateRandomBarcode(_ sender: NSButton) {
         // clear errors
         inputErrorMessege.cell?.title = ""
-        if userInput.cell?.title == "" {
-            inputErrorMessege.cell?.title = "Please insert a barcode value"
-            return
+        
+        // generate barcode from user input
+        if generateRandomChecked.state == NSControl.StateValue.off {
+            if userInput.cell?.title == "" {
+                inputErrorMessege.cell?.title = "Please insert a barcode value"
+                return
+            }
+            redrawView()
         }
-        redrawView()
+        
+        // generate barcode automatically <--- fix security
+        if onlyNumbersBox.state == NSControl.StateValue.on {
+            randomGeneratedBarcodes = generateRandomInt(numberOfDigits: Int(numberOfDigits.cell!.title)!,
+                              amount: Int(amount.cell!.title)!)
+            print(randomGeneratedBarcodes!)
+        }
     }
     
     @IBAction func saveBarcodes(_ sender: NSButton) {
     }
     
+    // MARK: - Functions
     // generate random barcode
-    func generateRandom() {
-        if onlyNumbersBox.state == NSControl.StateValue.on {
-            var counter: Int = 0
-            
-            // calculate minValue <--- explain more
-            let minValue: Int = {
-                var min = "1"
-                var counter = 0
-                while counter < Int(numberOfDigits.stringValue)! - 1 {
-                    min += "0"
-                    counter += 1
-                }
-                return Int(min)!
-            }()
-            
-            // calculate maxValue <--- explain more
-            var maxValue: Int {
-                var max = ""
-                var counter = 0
-                while counter < Int(numberOfDigits.stringValue)! {
-                    max += "9"
-                    counter += 1
-                }
-                return Int(max)!
+    func generateRandomInt(numberOfDigits: Int, amount: Int) -> [Int] {
+        var counter: Int = 0
+        var generatedNumber: Int = 0
+        var generatedNumbersArray: [Int] = []
+        
+        // calculate minValue <--- explain more
+        let minValue: Int = {
+            var min = "1"
+            var counter = 0
+            while counter < numberOfDigits - 1 {
+                min += "0"
+                counter += 1
             }
-            
-            // creat the random barcode
-            if let amount = Int(amount.stringValue) {
-                while counter < amount {
-                    let n = Int.random(in: minValue...maxValue)
-                    counter += 1
-                }
+            return Int(min)!
+        }()
+        
+        // calculate maxValue <--- explain more
+        var maxValue: Int {
+            var max = ""
+            var counter = 0
+            while counter < numberOfDigits {
+                max += "9"
+                counter += 1
             }
+            return Int(max)!
         }
+        
+        // creat the random barcode
+        while counter < amount {
+            generatedNumber = Int.random(in: minValue...maxValue)
+            generatedNumbersArray.append(generatedNumber)
+            counter += 1
+        }
+        return generatedNumbersArray
     }
     
     // draw barcode
@@ -134,9 +147,9 @@ class ViewController: NSViewController {
         
         /*
          At this stage the inputs are completley filterd.
-         So the only non-safe remaining is if the user provided a period without numbers or spaces only,
-         since 'filterString' function will delet spaces the inputs with spaces only will empty,
-         and inputs with one period will pass all the way to crash on line 167
+         So the only non-safe remaining is if the user provided a period without numbers or provided spaces only,
+         since 'filterString' function will delet spaces the inputs with spaces only will be empty,
+         and inputs with one period will pass all the tests only to crash later 
          */
         
         // check if inputs are usable values
@@ -199,4 +212,18 @@ class ViewController: NSViewController {
             barcodeView.needsDisplay = true
         }
     }
+}
+
+// MARK: - Table view data source
+extension ViewController: NSTableViewDataSource {
+    func numberOfRows(in tableView: NSTableView) -> Int {
+        return randomGeneratedBarcodes?.count ?? 0
+    }
+}
+
+
+// MARK: - Table view delegate
+
+extension ViewController: NSTableViewDelegate {
+    
 }
