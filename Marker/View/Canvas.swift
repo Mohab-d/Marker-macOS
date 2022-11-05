@@ -35,6 +35,7 @@ class Canvas: NSView {
     var barcodeYPosition: Double = 0.0
     var textYPosition: Double = 0.0
     var textXPosition: Double = 0.0
+    var imgBounds: CGSize = CGSize(width: 0, height: 0)
     
     // draw content
     override func draw(_ dirtyRect: NSRect) {
@@ -71,15 +72,15 @@ class Canvas: NSView {
                     ctx.setTextDrawingMode(.fill)
                     
                     // white rectangle
-                    var rectWidth: Double = 0.0
+                    let rectWidth: Double
                     if text.size().width > barcodeProperties.width {
                         rectWidth = text.size().width
                     } else { rectWidth = barcodeProperties.width }
                     
                     let whiteRect = CGRect(x: (drawingArea.width - rectWidth) / 2,
-                                           y: textYPosition - 3,
+                                           y: textYPosition,
                                            width: rectWidth,
-                                           height: barcodeProperties.height + text.size().height)
+                                           height: barcodeProperties.height)
                     ctx.setFillColor(CGColor.white)
                     ctx.addRect(whiteRect)
                     
@@ -87,6 +88,11 @@ class Canvas: NSView {
                     ctx.drawPath(using: CGPathDrawingMode.fill)
                     barcode.draw(in: barcodeRect)
                     text.draw(in: textRect)
+                    
+                    // image bounds
+                    imgBounds.width = whiteRect.width
+                    imgBounds.height = whiteRect.height + ((barcodeYPosition - textYPosition) * 2)
+ 
                 } else {
                     barcode.draw(in: barcodeRect)
                 }
@@ -121,3 +127,4 @@ class Canvas: NSView {
         return true
     }
 }
+    

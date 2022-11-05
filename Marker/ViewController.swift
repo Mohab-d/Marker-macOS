@@ -12,12 +12,10 @@ class ViewController: NSViewController {
     @IBOutlet weak var selectedFontSize: NSPopUpButton!
     @IBOutlet weak var generateRandomChecked: NSButton!
     @IBOutlet weak var showValueChecked: NSButton!
-    @IBOutlet weak var numberOfDigits: NSTextField!
-    @IBOutlet weak var randomBarcodesTable: NSTableView!
+    @IBOutlet weak var length: NSTextField!
     
     
     let markerController = MarkerController()
-    var randomGeneratedBarcodes: [Int]?
     
     override func viewDidLoad() {
         super.viewDidLoad()
@@ -56,7 +54,10 @@ class ViewController: NSViewController {
     }
     
     @IBAction func fontSizePressed(_ sender: NSPopUpButton) {
-        redrawView()
+        if userInput.cell?.title == "" {
+            return
+        }
+        drawToView(barcodeValue: userInput.cell!.title)
     }
     
     @IBAction func GenerateRandomBarcode(_ sender: NSButton) {
@@ -69,73 +70,47 @@ class ViewController: NSViewController {
                 inputErrorMessege.cell?.title = "Please insert a barcode value"
                 return
             }
-            redrawView()
+            drawToView(barcodeValue: userInput.cell!.title)
         }
         
-        // generate barcode automatically <--- fix security
+        // generate barcode automatically
         if onlyNumbersBox.state == NSControl.StateValue.on {
-            randomGeneratedBarcodes = generateRandomInt(numberOfDigits: Int(numberOfDigits.cell!.title)!,
-                              amount: Int(amount.cell!.title)!)
-            print(randomGeneratedBarcodes!)
+            if isInteger(input: amount) && isInteger(input: length){
+                for _ in 1...Int(amount.cell!.title)! {
+                    //markerController.generateRandomInt(numberOfDigits: Int(length.cell!.title)!)
+                }
+                return
+            }
+            inputErrorMessege.cell?.title = "Please insert a valid amount/Length"
         }
     }
     
     @IBAction func saveBarcodes(_ sender: NSButton) {
+        let width = userWidth.cell!.title
+        let height = userHeight.cell!.title
+        if width != "" && height != "" {
+            let barcodeImg = markerController.convertToImage(view: barcodeView, imageBounds: NSRect(origin: CGPoint(x: 0,
+                                                                                                                    y: 0),
+                                                                                                    size: CGSize(width: barcodeView.imgBounds.width,
+                                                                                                                 height: barcodeView.imgBounds.height)))
+            markerController.showSavePanel(img: barcodeImg)
+        }
+        return
     }
     
     // MARK: - Functions
-    // generate random barcode
-    func generateRandomInt(numberOfDigits: Int, amount: Int) -> [Int] {
-        var counter: Int = 0
-        var generatedNumber: Int = 0
-        var generatedNumbersArray: [Int] = []
-        
-        // calculate minValue <--- explain more
-        let minValue: Int = {
-            var min = "1"
-            var counter = 0
-            while counter < numberOfDigits - 1 {
-                min += "0"
-                counter += 1
-            }
-            return Int(min)!
-        }()
-        
-        // calculate maxValue <--- explain more
-        var maxValue: Int {
-            var max = ""
-            var counter = 0
-            while counter < numberOfDigits {
-                max += "9"
-                counter += 1
-            }
-            return Int(max)!
-        }
-        
-        // creat the random barcode
-        while counter < amount {
-            generatedNumber = Int.random(in: minValue...maxValue)
-            generatedNumbersArray.append(generatedNumber)
-            counter += 1
-        }
-        return generatedNumbersArray
-    }
-    
     // draw barcode
-    func redrawView() {
-        
-        // check if inputs are nil
-        if userWidth.cell?.title == "" {
-            inputErrorMessege.cell?.title = "Please insert width value"
-            return
-        }
-        if userHeight.cell?.title == "" {
-            inputErrorMessege.cell?.title = "Please insert a height value"
-            return
-        }
-        
+    func drawToView(barcodeValue: String) {
         // invalid characters set
         let invalidCharacters = NSCharacterSet(charactersIn:".0123456789").inverted
+        
+        // check if inputs are valid
+        if !markerController.dimensionsValidity(errorLabel: inputErrorMessege,
+                                                width: userWidth,
+                                                height: userHeight,
+                                                invalidCharacters: invalidCharacters) {
+            return
+        }
         
         // delet spaces from inputs
         let width = markerController.filterString(invalidCharacters: invalidCharacters,
@@ -145,40 +120,9 @@ class ViewController: NSViewController {
                                                    string: userHeight.cell!.title,
                                                    replacement: "")
         
-        /*
-         At this stage the inputs are completley filterd.
-         So the only non-safe remaining is if the user provided a period without numbers or provided spaces only,
-         since 'filterString' function will delet spaces the inputs with spaces only will be empty,
-         and inputs with one period will pass all the tests only to crash later 
-         */
-        
-        // check if inputs are usable values
-        if width == "" || width == "." {
-            inputErrorMessege.cell?.title = "Please insert a width value"
-            return
-        }
-        if height == "" || height == "." {
-            inputErrorMessege.cell?.title = "Please insert a height value"
-            return
-        }
-        
-        // correct user input
-        userWidth.cell?.title = width
-        userHeight.cell?.title = height
-        
-        // check if string contains more than one period
-        if markerController.periodCounter(string: width) > 1 {
-            inputErrorMessege.cell?.title = "Invalid width, contains more than one period"
-            return
-        }
-        if markerController.periodCounter(string: height) > 1 {
-            inputErrorMessege.cell?.title = "Invalid height, contains more than one period"
-            return
-        }
-        
         // convert inputs from cm to pixels
-        let computedWidth = Double(width)! * 37.795275591
-        let computedHeight = Double(height)! * 37.795275591
+        let computedWidth = Double(width)! * 28.35
+        let computedHeight = Double(height)! * 28.35
         
         // check if user want to show the barcode value
         let isReadable: Bool = {
@@ -198,7 +142,7 @@ class ViewController: NSViewController {
         }()
         
         // creat barcode object
-        let barcode = BarcodePropeties(barcodeValue: userInput.cell!.title,
+        let barcode = BarcodePropeties(barcodeValue: barcodeValue,
                                        width: computedWidth,
                                        height: computedHeight,
                                        textSize: fontSize,
@@ -212,18 +156,12 @@ class ViewController: NSViewController {
             barcodeView.needsDisplay = true
         }
     }
-}
-
-// MARK: - Table view data source
-extension ViewController: NSTableViewDataSource {
-    func numberOfRows(in tableView: NSTableView) -> Int {
-        return randomGeneratedBarcodes?.count ?? 0
-    }
-}
-
-
-// MARK: - Table view delegate
-
-extension ViewController: NSTableViewDelegate {
     
+    /*
+     input == int? -> return true
+     else return flase
+     */
+    func isInteger(input: NSTextField) -> Bool {
+        Int(input.cell!.title) != nil ? true: false
+    }
 }
