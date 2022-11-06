@@ -56,9 +56,7 @@
 		885245C828C5DD6700FABF62 /* Marker */ = {
 			isa = PBXGroup;
 			children = (
-				885245DD28C5F2C900FABF62 /* Model */,
 				885245DE28C5F37900FABF62 /* MarkerController.swift */,
-				885245DC28C5F2BE00FABF62 /* Controller */,
 				885245C928C5DD6700FABF62 /* AppDelegate.swift */,
 				885245CB28C5DD6700FABF62 /* ViewController.swift */,
 				885245DA28C5F1E500FABF62 /* View */,
@@ -75,20 +73,6 @@
 				8844656828CB2A3C004D8C64 /* Canvas.swift */,
 			);
 			path = View;
-			sourceTree = "<group>";
-		};
-		885245DC28C5F2BE00FABF62 /* Controller */ = {
-			isa = PBXGroup;
-			children = (
-			);
-			path = Controller;
-			sourceTree = "<group>";
-		};
-		885245DD28C5F2C900FABF62 /* Model */ = {
-			isa = PBXGroup;
-			children = (
-			);
-			path = Model;
 			sourceTree = "<group>";
 		};
 /* End PBXGroup section */

@@ -252,6 +252,11 @@ struct MarkerController {
         }
     }
     
-    // generate the random barcodes
-    
+    /*
+     input == int? -> return true
+     else return flase
+     */
+    func isInteger(input: NSTextField) -> Bool {
+        Int(input.cell!.title) != nil ? true: false
+    }
 }

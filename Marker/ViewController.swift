@@ -61,27 +61,14 @@ class ViewController: NSViewController {
     }
     
     @IBAction func GenerateRandomBarcode(_ sender: NSButton) {
-        // clear errors
-        inputErrorMessege.cell?.title = ""
-        
-        // generate barcode from user input
+        // generate barcode manually
         if generateRandomChecked.state == NSControl.StateValue.off {
-            if userInput.cell?.title == "" {
-                inputErrorMessege.cell?.title = "Please insert a barcode value"
-                return
-            }
-            drawToView(barcodeValue: userInput.cell!.title)
+            generateBarcodeMnually()
         }
         
         // generate barcode automatically
         if onlyNumbersBox.state == NSControl.StateValue.on {
-            if isInteger(input: amount) && isInteger(input: length){
-                for _ in 1...Int(amount.cell!.title)! {
-                    //markerController.generateRandomInt(numberOfDigits: Int(length.cell!.title)!)
-                }
-                return
-            }
-            inputErrorMessege.cell?.title = "Please insert a valid amount/Length"
+            
         }
     }
     
@@ -97,6 +84,16 @@ class ViewController: NSViewController {
         }
         return
     }
+    
+    /*
+     when the user choose to creat barcode manually:
+        generate button change the view only
+        save button do like generate button + the saving
+     when user generate barcode automatically:
+        generate button should be deactivated
+        save button will creat all the barcodes then show the save panel
+        the name of every barcode shall be the barcode value
+     */
     
     // MARK: - Functions
     // draw barcode
@@ -157,11 +154,16 @@ class ViewController: NSViewController {
         }
     }
     
-    /*
-     input == int? -> return true
-     else return flase
-     */
-    func isInteger(input: NSTextField) -> Bool {
-        Int(input.cell!.title) != nil ? true: false
+    // generate barcode manually
+    func generateBarcodeMnually() {
+        // clear errors
+        inputErrorMessege.cell?.title = ""
+        
+        // generate barcode from user input
+        if userInput.cell?.title == "" {
+            inputErrorMessege.cell?.title = "Please insert a barcode value"
+            return
+        }
+        drawToView(barcodeValue: userInput.cell!.title)
     }
 }
