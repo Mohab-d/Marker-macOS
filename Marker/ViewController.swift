@@ -2,10 +2,9 @@ import Cocoa
 
 class ViewController: NSViewController {
     
-    @IBOutlet weak var barcodeView: Canvas!
+    // outlets
     @IBOutlet weak var userInput: NSTextField!
     @IBOutlet weak var amount: NSTextField!
-    @IBOutlet weak var onlyNumbersBox: NSButton!
     @IBOutlet weak var userWidth: NSTextField!
     @IBOutlet weak var userHeight: NSTextField!
     @IBOutlet weak var inputErrorMessege: NSTextField!
@@ -19,9 +18,9 @@ class ViewController: NSViewController {
     
     override func viewDidLoad() {
         super.viewDidLoad()
-        amount.isEnabled = false
-        onlyNumbersBox.isEnabled = false
         selectedFontSize.isEnabled = false
+        amount.isEnabled = false
+        length.isEnabled = false
         selectedFontSize.removeAllItems()
         selectedFontSize.addItems(withTitles: ["Font size", "6", "8", "10", "12", "14", "16", "18",
                                                "20", "22", "24", "26", "28", "30", "32", "34", "36"])
@@ -36,13 +35,13 @@ class ViewController: NSViewController {
     @IBAction func generateRandomPressed(_ sender: NSButton) {
         if generateRandomChecked.state == NSControl.StateValue.on {
             amount.isEnabled = true
-            onlyNumbersBox.isEnabled = true
+            length.isEnabled = true
             userInput.isEnabled = false
             return
         }
         userInput.isEnabled = true
         amount.isEnabled = false
-        onlyNumbersBox.isEnabled = false
+        length.isEnabled = false
     }
     
     @IBAction func showValuePressed(_ sender: NSButton) {
@@ -53,117 +52,82 @@ class ViewController: NSViewController {
         selectedFontSize.isEnabled = false
     }
     
-    @IBAction func fontSizePressed(_ sender: NSPopUpButton) {
-        if userInput.cell?.title == "" {
+    @IBAction func saveBarcodes(_ sender: NSButton) {
+        // clear errors
+        inputErrorMessege.stringValue = ""
+        
+        // auto generate barcode and save it
+
+        /*
+         conditions to check:
+         amount and lenght are only integers
+         numbers only box is checked
+         amount have maximum of 100
+         lenght have maximum of 70 character
+         methode:
+         show save panel to make user choose location
+         take location url from save panel object
+         name each barcode accourding to it's value
+         save barcodes
+         */
+        
+        if generateRandomChecked.state == NSControl.StateValue.on {
+            
+            
+            // check if amount and lenght are nil
+            if amount.cell?.title == "" {
+                inputErrorMessege.cell?.title = "Please provide an amount"
+                return
+            }
+            if length.cell?.title == "" {
+                inputErrorMessege.cell?.title = "Please provide a lenght"
+                return
+            }
+            
+            //check if amount and lenght are Int
+            let amountIsInt = markerController.isInteger(input: amount)
+            let lenghtIsInt = markerController.isInteger(input: length)
+            
+            // check if amount and lenght exceed their limits
+            if amountIsInt && lenghtIsInt {
+                if Int(amount.cell!.title)! > 100 {
+                    inputErrorMessege.cell?.title = "Maximum amount per one time is 100"
+                    return
+                }
+                if Int(length.cell!.title)! > 70 {
+                    inputErrorMessege.cell?.title = "Maximum length is 70"
+                }
+                
+                //-- after all tests passed start auto generation
+                // get location from save panel
+                markerController.generateRandomBarcodesAndSaveThem(amount: Int(amount.cell!.title)!,
+                                                                   length: Int(length.cell!.title)!,
+                                                                   userWidth: userWidth,
+                                                                   userHeight: userHeight,
+                                                                   inputErrorMessege: inputErrorMessege,
+                                                                   showValueChecked: showValueChecked,
+                                                                   selectedFontSize: selectedFontSize)
+            }
             return
         }
-        drawToView(barcodeValue: userInput.cell!.title)
-    }
-    
-    @IBAction func GenerateRandomBarcode(_ sender: NSButton) {
-        // generate barcode manually
-        if generateRandomChecked.state == NSControl.StateValue.off {
-            generateBarcodeMnually()
-        }
         
-        // generate barcode automatically
-        if onlyNumbersBox.state == NSControl.StateValue.on {
+        // save manually generated barocdes
+        if userInput.cell?.title != "" {
+            let barcode = markerController.creatBarcode(barcodeValue: userInput.cell!.title,
+                                                        userWidth: userWidth,
+                                                        userHeight: userHeight,
+                                                        inputErrorMessege: inputErrorMessege,
+                                                        showValueChecked: showValueChecked,
+                                                        selectedFontSize: selectedFontSize)!
             
+            markerController.showSavePanel(img: barcode)
+            return
         }
-    }
-    
-    @IBAction func saveBarcodes(_ sender: NSButton) {
-        let width = userWidth.cell!.title
-        let height = userHeight.cell!.title
-        if width != "" && height != "" {
-            let barcodeImg = markerController.convertToImage(view: barcodeView, imageBounds: NSRect(origin: CGPoint(x: 0,
-                                                                                                                    y: 0),
-                                                                                                    size: CGSize(width: barcodeView.imgBounds.width,
-                                                                                                                 height: barcodeView.imgBounds.height)))
-            markerController.showSavePanel(img: barcodeImg)
-        }
+        inputErrorMessege.cell?.title = "Please provide a barcode value"
         return
     }
-    
-    /*
-     when the user choose to creat barcode manually:
-        generate button change the view only
-        save button do like generate button + the saving
-     when user generate barcode automatically:
-        generate button should be deactivated
-        save button will creat all the barcodes then show the save panel
-        the name of every barcode shall be the barcode value
-     */
-    
-    // MARK: - Functions
-    // draw barcode
-    func drawToView(barcodeValue: String) {
-        // invalid characters set
-        let invalidCharacters = NSCharacterSet(charactersIn:".0123456789").inverted
-        
-        // check if inputs are valid
-        if !markerController.dimensionsValidity(errorLabel: inputErrorMessege,
-                                                width: userWidth,
-                                                height: userHeight,
-                                                invalidCharacters: invalidCharacters) {
-            return
-        }
-        
-        // delet spaces from inputs
-        let width = markerController.filterString(invalidCharacters: invalidCharacters,
-                                                  string: userWidth.cell!.title,
-                                                  replacement: "")
-        let height = markerController.filterString(invalidCharacters: invalidCharacters,
-                                                   string: userHeight.cell!.title,
-                                                   replacement: "")
-        
-        // convert inputs from cm to pixels
-        let computedWidth = Double(width)! * 28.35
-        let computedHeight = Double(height)! * 28.35
-        
-        // check if user want to show the barcode value
-        let isReadable: Bool = {
-            if showValueChecked.state == NSControl.StateValue.on {
-                return true
-            }
-            return false
-        }()
-        
-        // user's selected font size
-        let fontSize: Double = {
-            if selectedFontSize.title != "Font size" {
-                return Double(selectedFontSize.title)!
-            }
-            inputErrorMessege.stringValue = "An unknown error occured"
-            return 0.0
-        }()
-        
-        // creat barcode object
-        let barcode = BarcodePropeties(barcodeValue: barcodeValue,
-                                       width: computedWidth,
-                                       height: computedHeight,
-                                       textSize: fontSize,
-                                       hasLabel: isReadable)
-        
-        // set the barcode properties to the new barcode
-        barcodeView.barcodeProperties = barcode
-        
-        // start drawing if conditions are passed
-        if barcodeView.checkConditions(label: inputErrorMessege) {
-            barcodeView.needsDisplay = true
-        }
-    }
-    
-    // generate barcode manually
-    func generateBarcodeMnually() {
-        // clear errors
-        inputErrorMessege.cell?.title = ""
-        
-        // generate barcode from user input
-        if userInput.cell?.title == "" {
-            inputErrorMessege.cell?.title = "Please insert a barcode value"
-            return
-        }
-        drawToView(barcodeValue: userInput.cell!.title)
-    }
 }
+/*
+ let url: URL = URL(string: "file:///Users/imac/Desktop/randomGeneratedBarcodes/\(2).png")!
+ markerController.savePNG(image: barcodeImage, path: url)
+ */

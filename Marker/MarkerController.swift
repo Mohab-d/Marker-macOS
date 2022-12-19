@@ -122,14 +122,13 @@ struct MarkerController {
     ///     - invalidCharacters: A set of invalid characters
     ///
     /// - Returns: A boolean value indicating if inputs were valid
-    func dimensionsValidity(errorLabel inputErrorMessege: NSTextField, width userWidth: NSTextField, height userHeight: NSTextField, invalidCharacters: CharacterSet) -> Bool
-    {
+    func dimensionsValidity(errorLabel inputErrorMessege: NSTextField, width userWidth: NSTextField, height userHeight: NSTextField, invalidCharacters: CharacterSet) -> Bool {
         // check if inputs are nil
-        if userWidth.cell?.title == "" {
+        if userWidth.cell!.title.isEmpty {
             inputErrorMessege.cell?.title = "Please insert width value"
             return false
         }
-        if userHeight.cell?.title == "" {
+        if userHeight.cell!.title.isEmpty {
             inputErrorMessege.cell?.title = "Please insert a height value"
             return false
         }
@@ -150,11 +149,11 @@ struct MarkerController {
          */
         
         // check if inputs are usable values
-        if width == "" || width == "." {
+        if width.isEmpty || width == "." {
             inputErrorMessege.cell?.title = "Please insert a width value"
             return false
         }
-        if height == "" || height == "." {
+        if height.isEmpty || height == "." {
             inputErrorMessege.cell?.title = "Please insert a height value"
             return false
         }
@@ -212,9 +211,9 @@ struct MarkerController {
     //    }
     
     // get NSImage from a NSView
-    func convertToImage(view: NSView, imageBounds: NSRect) -> NSImage {
-        let rep = view.bitmapImageRepForCachingDisplay(in: imageBounds)!
-        view.cacheDisplay(in: imageBounds, to: rep)
+    func convertToImage(view: NSView) -> NSImage {
+        let rep = view.bitmapImageRepForCachingDisplay(in: view.bounds)!
+        view.cacheDisplay(in: view.bounds, to: rep)
         let image: NSImage = NSImage()
         image.addRepresentation(rep)
         return image
@@ -252,11 +251,113 @@ struct MarkerController {
         }
     }
     
-    /*
-     input == int? -> return true
-     else return flase
-     */
+    // generate random barcodes and save them
+    func generateRandomBarcodesAndSaveThem(amount: Int, length: Int, userWidth: NSTextField, userHeight: NSTextField, inputErrorMessege: NSTextField, showValueChecked: NSButton, selectedFontSize: NSPopUpButton) {
+        let savePanel = buildSavePanel()
+        savePanel.begin { (result: NSApplication.ModalResponse) -> Void in
+            if result.rawValue == NSApplication.ModalResponse.OK.rawValue {
+                if let panelURL = savePanel.directoryURL {
+                    // creat barcodes to save
+                    var counter = 0
+                    while counter < amount {
+                        let randomBarcodeValue = generateRandomInt(numberOfDigits: length)
+                        let barcode = creatBarcode(barcodeValue: randomBarcodeValue,
+                                                   userWidth: userWidth,
+                                                   userHeight: userHeight,
+                                                   inputErrorMessege: inputErrorMessege,
+                                                   showValueChecked: showValueChecked,
+                                                   selectedFontSize: selectedFontSize)!
+                        let url = "\(panelURL)/\(randomBarcodeValue).png"
+                        let savingPath: URL = URL(string: url)!
+                        savePNG(image: barcode, path: savingPath)
+                        counter += 1
+                    }
+                }
+            }
+        }
+    }
+    
+    // check if a number is integer
     func isInteger(input: NSTextField) -> Bool {
         Int(input.cell!.title) != nil ? true: false
     }
+    
+    // check the manualy provided barcode value validity
+    /// Checks if manual input is valid
+    ///
+    /// - Parameters:
+    ///     - errorLabel: a label in which to write the error messege
+    ///
+    /// - Returns: return true if inpu is valid
+    func checkManualBarcodeValue(manualInput: String, errorLabel: NSTextField) -> Bool {
+        if manualInput.isEmpty {
+            errorLabel.stringValue = "Please insert barcode value"
+            return false
+        }
+        
+        let characterset = CharacterSet(charactersIn:"abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789-")
+        if manualInput.rangeOfCharacter(from: characterset.inverted) != nil {
+            errorLabel.stringValue = "Should only contains A to Z, -"
+            return false
+        }
+        
+        if manualInput.count > 70 {
+            errorLabel.stringValue = "Limit is 70 characters"
+            return false
+        }
+        return true
+    }
+    
+    func creatBarcode(barcodeValue: String, userWidth: NSTextField, userHeight: NSTextField, inputErrorMessege: NSTextField, showValueChecked: NSButton, selectedFontSize: NSPopUpButton) -> NSImage? {
+        // invalid characters set
+        let invalidCharacters = NSCharacterSet(charactersIn:".0123456789").inverted
+        
+        // check inputs to start generating
+        let dimensionsAreValid = dimensionsValidity(errorLabel: inputErrorMessege,
+                                                                     width: userWidth,
+                                                                     height: userHeight,
+                                                                     invalidCharacters: invalidCharacters)
+        if dimensionsAreValid {
+            // convert dimensions
+            let width = Double(userWidth.cell!.title)! * 28.35
+            let height = Double(userHeight.cell!.title)! * 28.35
+            
+            // check if user want to show the barcode value
+            let isReadable: Bool = {
+                if showValueChecked.state == NSControl.StateValue.on {
+                    return true
+                }
+                return false
+            }()
+            
+            // user's selected font size
+            let fontSize: Double = {
+                if selectedFontSize.title != "Font size" {
+                    return Double(selectedFontSize.title)!
+                }
+                return 0.0
+            }()
+            
+            // set barcode properties
+            let barcodeProperties = BarcodeProperties(barcodeValue: barcodeValue,
+                                                      width: width,
+                                                      height: height,
+                                                      fontSize: fontSize,
+                                                      hasLabel: isReadable)
+            
+            // creat NSView to draw barcode in
+            let canvas = Canvas(frame: NSRect(origin: .zero, size: CGSize(width: width,
+                                                                          height: height)))
+            
+            // if text is out of frame change frame size
+            canvas.frame.size.height += (Double(barcodeProperties.fontSize) * 1.33)
+            // draw barcode
+            canvas.barcodeProperties = barcodeProperties
+            canvas.needsDisplay = true
+            
+            return convertToImage(view: canvas)
+        }
+        return nil
+    }
 }
+
