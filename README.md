@@ -20,12 +20,12 @@ a save panel to choose the saving location then marker would save all generated 
 So this was how marker works, no let's talk a bit technical:  
 
 ### Canvas
-So marker have canvas which is a NSView file that contains all the code resposible of drawing the barcode to a view called NSView using the functions from anouther file called MarkerController.  
-Canvas is a special NSView because it made with love, i made canvas to be usable, it has a struct called BarcodeProperties which you use to get back a barcode object containing the image generated for that barcode
+So marker have canvas which is a NSView file that contains all the code resposible for drawing the barcode to a view called NSView using the functions from anouther file called MarkerController.  
+Canvas is a special NSView because it's made with love, i made canvas to be usable, it has a struct called BarcodeProperties which you use to get back a barcode object containing the image generated for that barcode.  
 
 ### MarkerController
-This struct is the brain of marker, this is what all the magic happens, in this struct you will see the functions that creats the barcode using the CFFilters and the CGContexts, then you see the function responsible to show the saving panel, the function that generates a random integers to use in the automatic generation process, you will see a func like filter string wich delet any thing unwanted in the provided string which is specified as an invalidset a data type specified in the swift language it self.  
-Continue to see functions like periodeCounter which is a function used to count the periods in the given string which sounds dumb but i use it to see if the user provided only a dot in the text fields or provided a width and height value but gave 2 periods by accident so this actually prevents marker from crashing like dimensionsValidity function.  
+This struct is the brain of marker, this is where all the magic happens, in this struct you will see the functions that creats the barcode using the CFFilters and the CGContexts, then you see the function responsible to show the saving panel, the function that generates a random integers to use in the automatic generation process, you will see a func like filterString which delet any thing unwanted in the provided string which is specified as an invalidset a data type specified in the swift language it self.  
+Continue to see functions like periodeCounter which is a function used to count the periods in the given string which sounds dumb but i use it to see if the user provided only a periode in the text fields or provided a width and height value but gave 2 periods by accident so this actually prevents marker from crashing like dimensionsValidity function.  
 You can see a that there are a lot of functions in marker are only designed to prevent crashes to povide a good user expirience and to be usable anywhere for my future apps.  
 and you might see some functions thare weren't used at all and these are some futures that i wanted to include in future updates.  
 
