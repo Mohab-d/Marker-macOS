@@ -25,7 +25,7 @@ Canvas is a special NSView because it's made with love, i made canvas to be usab
 
 ### MarkerController
 This struct is the brain of marker, this is where all the magic happens, in this struct you will see the functions that creats the barcode using the CFFilters and the CGContexts, then you see the function responsible to show the saving panel, the function that generates a random integers to use in the automatic generation process, you will see a func like filterString which delet any thing unwanted in the provided string which is specified as an invalidset a data type specified in the swift language it self.  
-Continue to see functions like periodeCounter which is a function used to count the periods in the given string which sounds dumb but i use it to see if the user provided only a periode in the text fields or provided a width and height value but gave 2 periods by accident so this actually prevents marker from crashing like dimensionsValidity function.  
+Continue to see functions like periodeCounter which is a function used to count the periods in the given string, i use it to see if the user provided only a periode in the text fields or provided a width and height value but gave 2 periods by accident so this actually prevents marker from crashing like dimensionsValidity function.  
 You can see a that there are a lot of functions in marker are only designed to prevent crashes to povide a good user expirience and to be usable anywhere for my future apps.  
 and you might see some functions thare weren't used at all and these are some futures that i wanted to include in future updates.  
 
